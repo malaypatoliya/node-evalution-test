@@ -32,19 +32,11 @@ const addPostFunc = (req, res) => {
         if (!title || !body) {
             res.status(400).json({ success: success, errMsg: "Please fill all the fields" });
         } else {
-            // check user is exist or not
-            connection.query(`select * from users where id="${auther_id}";`, (err, result) => {
+            // insert post in database
+            connection.query(`insert into posts(title, body, auther_id) values("${title}", "${body}", "${auther_id}");`, (err) => {
                 if (err) throw err;
-                if (result.length > 0) {
-                    // insert post in database
-                    connection.query(`insert into posts(title, body, auther_id) values("${title}", "${body}", "${auther_id}");`, (err) => {
-                        if (err) throw err;
-                        success = true;
-                        res.status(200).json({ success: success, Msg: "Post created successfully" });
-                    })
-                } else {
-                    res.status(400).json({ success: success, errMsg: "User not exists" });
-                }
+                success = true;
+                res.status(200).json({ success: success, Msg: "Post created successfully" });
             })
         }
     } catch (error) {
